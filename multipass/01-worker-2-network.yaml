@@ -1,0 +1,9 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    default:
+      dhcp4: yes
+      addresses: 
+        - 172.22.5.22/20
+ 
