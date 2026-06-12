@@ -23,10 +23,10 @@ sudo mkdir -p /etc/kubernetes/config
 Download the official Kubernetes release binaries:
 
 ```
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kube-apiserver 
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kube-controller-manager 
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kube-scheduler 
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kube-apiserver 
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kube-controller-manager 
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kube-scheduler 
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kubectl
 ```
 
 Reference: https://kubernetes.io/docs/setup/release/#server-binaries
@@ -270,7 +270,7 @@ curl  https://172.22.5.30:6443/version -k
   "buildDate": "2018-12-03T20:56:12Z",
   "goVersion": "go1.11.2",
   "compiler": "gc",
-  "platform": "linux/amd64"
+  "platform": "linux/arm64"
 }
 ```
 

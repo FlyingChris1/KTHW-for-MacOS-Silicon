@@ -53,9 +53,9 @@ Download and Install Worker Binaries
 On `worker-2`
 
 ```
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kubelet
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kube-proxy 
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kubelet
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kube-proxy 
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kubectl
 ```
 
 Reference: https://kubernetes.io/docs/setup/release/#node-binaries

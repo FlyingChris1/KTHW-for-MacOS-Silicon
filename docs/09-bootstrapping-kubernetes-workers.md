@@ -103,9 +103,9 @@ Going forward all activities are to be done on the `worker-1` node.
 
 On `worker-1`:
 ```
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kubelet
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kube-proxy 
-curl -LO https://dl.k8s.io/v1.23.4/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kubelet
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kube-proxy 
+curl -LO https://dl.k8s.io/v1.23.4/bin/linux/arm64/kubectl
 ```
 
 Reference: https://kubernetes.io/docs/setup/release/#node-binaries

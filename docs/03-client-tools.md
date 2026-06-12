@@ -17,7 +17,7 @@ Leave all settings to default.
 View the generated public key ID at:
 
 ```
-cat .ssh/id_rsa.pub
+cat .ssh/id_red25519.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@controller-1
 ```
 
@@ -46,7 +46,7 @@ Reference: [https://kubernetes.io/docs/tasks/tools/install-kubectl/](https://kub
 On `controller-1`
 
 ```
-curl -LO https://dl.k8s.io/release/v1.23.4/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/release/v1.23.4/bin/linux/arm64/kubectl
 ```
 
 ```
@@ -69,7 +69,7 @@ kubectl version --client
 
 ```
 Client Version: version.Info{Major:"1", Minor:"23", GitVersion:"v1.23.4", GitCommit:"e6c093d87ea4cbb530a7b2ae91e54c0842d8308a", GitTreeState:"clean", BuildDate:"2022-02-16T12:38:05Z", GoVersion:"go1.17.7", Compiler:"gc", 
-Platform:"linux/amd64"}
+Platform:"linux/arm"}
 ```
 
 Next: [Certificate Authority](04-certificate-authority.md)

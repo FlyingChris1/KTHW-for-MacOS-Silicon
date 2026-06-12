@@ -9,9 +9,7 @@
 
 ### Download and Install [Multipass](https://multipass.run/) on any one of the supported platforms:
 
- - [Windows 10](https://multipass.run/docs/installing-on-windows)
  - macOS
- - Linux
 
 ### Check Installation
 

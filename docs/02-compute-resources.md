@@ -13,7 +13,7 @@ Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-in
 
 ## Netplan
 
-By default multipass will dynamically allocate an IP Address for each host. However, for kubernetes setup we need to maintain static IPs across the hosts. In order to set static IPs we will be using [Netplan](https://netplan.io/) yaml configuration files. In the `multipass` directory there are netplan configuration files for each host which will be copied to `/etc/netplan/` on each respective host. Lastly, we will restart each host to apply the configuration (Normally we would run `netplan apply`, however, this causes the multipass shell to hang).  
+By default multipass will dynamically allocate an IP Address for each host. However, for kubernetes setup we need to maintain static IPs across the hosts. In order to set static IPs we will be using [Netplan](https://netplan.io/) yaml configuration files. In the `multipass` directory there are netplan configuration files for each host which will be copied to `/etc/netplan/` on each respective host.
 
 e.g `01-controller-1-network.yaml` looks like the following:
 
@@ -22,8 +22,7 @@ network:
   version: 2
   renderer: networkd
   ethernets:
-    eth0:
-      dhcp4: no
+      dhcp4: yes
       addresses: 
         - 172.22.5.11/20
 ```

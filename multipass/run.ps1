@@ -19,10 +19,10 @@ Start-Sleep -Seconds 20
 multipass launch --cloud-init controller-cloud-config.yml --disk 5G --memory 1G --cpus 1 --name loadbalancer
 Start-Sleep -Seconds 20
 
-multipass launch --cloud-init worker-cloud-config.yml --disk 5G --memory 1G --cpus 1 --name worker-1
+multipass launch --cloud-init worker-cloud-config.yml --disk 5G --memory 5G --cpus 1 --name worker-1
 Start-Sleep -Seconds 20
 
-multipass launch --cloud-init worker-cloud-config.yml --disk 5G --memory 1G --cpus 1 --name worker-2
+multipass launch --cloud-init worker-cloud-config.yml --disk 5G --memory 5G --cpus 1 --name worker-2
 Start-Sleep -Seconds 30
 
 Write-Host "Copying netplan yaml"
