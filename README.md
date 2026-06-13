@@ -1,47 +1,323 @@
-> - This repo is an updated version of the following repository - Modified for Apple Silicon Devices 
-> - [shan-ali/kubernetes-the-hard-way](https://github.com/shan-ali/kubernetes-the-hard-way)
+# Kubernetes The Hard Way with Multipass
 
-# Kubernetes The Hard Way On Multipass on MacOS Silicon
+Build a complete Kubernetes cluster from scratch on your local machine using Multipass and Ubuntu VMs.
 
-This tutorial walks you through setting up Kubernetes the Hard Way on a local machine using Multipass. 
-Kubernetes The Hard Way is optimized for learning, which means taking the long route to ensure you understand each task required to bootstrap a Kubernetes cluster.
+This project is based on the concepts from Kubernetes The Hard Way. It gives you the option to set up your cluster manually or automate the repetitive steps while preserving the educational value of manually bootstrapping Kubernetes components.
 
-> This tutorial is for educational purposes only! Don't run this in production :)
+The result is a fully functional Kubernetes cluster consisting of:
 
-## Target Audience
+- 1 Control Plane Node (`controller-1`)
+- 2 Worker Nodes (`worker-1`, `worker-2`)
+- etcd
+- kube-apiserver
+- kube-controller-manager
+- kube-scheduler
+- kubelet
+- kube-proxy
+- Calico CNI
 
-This tutorial is for those wanting to try kubernetes-the-hard-way but using their local machine instead of GCP or any other cloud provider. It is also intended to teach you the inner workings of a kubernetes cluster and all of its components. 
+Tested with:
 
-## Cluster Details
+- macOS
+- Multipass
+- Ubuntu 26.04 LTS
+- Kubernetes v1.34.1
 
-Kubernetes The Hard Way guides you through bootstrapping a highly available Kubernetes cluster with end-to-end encryption between components and RBAC authentication.
+---
 
-* [Kubernetes](https://github.com/kubernetes/kubernetes) 1.34.1 or higher
-* [Docker Container Runtime](https://docs.docker.com/) 20.10.13
-* [etcd](https://github.com/coreos/etcd) 3.5.2
-* [Calico](https://projectcalico.docs.tigera.io/about/about-calico) 3.22
-* [CoreDNS](https://github.com/coredns/coredns) coredns/coredns:1.9.0
+# Table of Contents
 
-## Labs
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [Cluster Verification](#cluster-verification)
+- [Cleanup](#cleanup)
+- [Troubleshooting](#troubleshooting)
 
-* [Prerequisites](docs/01-prerequisites.md)
-* [Provisioning Compute Resources](docs/02-compute-resources.md)
-* [Installing the Client Tools](docs/03-client-tools.md)
-* [Provisioning the CA and Generating TLS Certificates](docs/04-certificate-authority.md)
-* [Generating Kubernetes Configuration Files for Authentication](docs/05-kubernetes-configuration-files.md)
-* [Generating the Data Encryption Config and Key](docs/06-data-encryption-keys.md)
-* [Bootstrapping the etcd Cluster](docs/07-bootstrapping-etcd.md)
-* [Bootstrapping the Kubernetes Control Plane](docs/08-bootstrapping-kubernetes-controllers.md)
-* [Bootstrapping the Kubernetes Worker Nodes](docs/09-bootstrapping-kubernetes-workers.md)
-* [TLS Bootstrapping the Kubernetes Worker Nodes](docs/10-tls-bootstrapping-kubernetes-workers.md)
-* [Configuring kubectl for Remote Access](docs/11-configuring-kubectl.md)
-* [Deploy Calico - Pod Networking Solution](docs/12-configure-pod-networking.md)
-* [Kube API Server to Kubelet Configuration](docs/13-kube-apiserver-to-kubelet.md)
-* [Deploying the DNS Cluster Add-on](docs/14-dns-addon.md)
-* [Smoke Test](docs/15-smoke-test.md)
+---
 
+# Architecture
 
-## Final Cluster architecture
-<p align="center">
-  <img src="Cluster-Architecture.png" alt="Kubernetes The Hard Way Cluster Architecture" width="1000">
-</p>
+![Cluster Architecture](Cluster-Architecture.png)
+
+Cluster layout:
+
+| Node | IP Address | Role |
+|--------|------------|--------|
+| controller-1 | 172.22.5.11 | Control Plane |
+| worker-1 | 172.22.5.21 | Worker |
+| worker-2 | 172.22.5.22 | Worker |
+
+---
+
+# Prerequisites
+
+Install the following tools on your workstation.
+
+## Multipass
+
+```bash
+brew install multipass
+```
+
+Verify:
+
+```bash
+multipass version
+```
+
+---
+
+## PowerShell
+
+Required to execute the Multipass provisioning script.
+
+```bash
+brew install --cask powershell
+```
+
+Verify:
+
+```bash
+pwsh --version
+```
+
+---
+
+## Git
+
+```bash
+git --version
+```
+
+---
+
+# Quick Start
+
+## Set up the cluster manually
+
+[Follow these steps](docs/01-prerequisites-and-vms.md)
+
+## Set up the cluster automated
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/FlyingChris1/KTHW-for-MacOS-Silicon.git
+cd kubernetes-the-hard-way-multipass
+```
+
+---
+
+### 2. Create the virtual machines
+
+```bash
+cd multipass
+pwsh ./run.ps1
+cd ..
+```
+
+This creates:
+
+```text
+controller-1
+worker-1
+worker-2
+```
+
+and configures:
+
+- networking
+- hostname resolution
+- SSH access from controller-1 to workers
+
+---
+
+### 3. Copy the repository to controller-1
+
+```bash
+multipass exec controller-1 -- mkdir -p /home/ubuntu/kubernetes-the-hard-way
+
+multipass transfer -r . controller-1:/home/ubuntu/kubernetes-the-hard-way
+```
+
+---
+
+### 4. Connect to controller-1
+
+```bash
+multipass shell controller-1
+```
+
+---
+
+### 5. Run the automated installer
+
+```bash
+cd ~/kubernetes-the-hard-way
+
+chmod +x scripts/*.sh
+
+bash scripts/install-all.sh
+```
+
+The installer automatically performs:
+
+```text
+01 Certificates
+02 Kubeconfigs
+03 Encryption Configuration
+04 etcd
+05 Control Plane
+06 Workers
+07 Calico
+99 Verification
+```
+
+Installation typically takes several minutes.
+
+---
+
+# Usage
+
+## Verify cluster health
+
+```bash
+kubectl get nodes \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+Expected:
+
+```text
+NAME           STATUS   ROLES    AGE   VERSION
+controller-1   Ready    <none>   ...
+worker-1       Ready    <none>   ...
+worker-2       Ready    <none>   ...
+```
+
+---
+
+## View system pods
+
+```bash
+kubectl get pods -A \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+---
+
+## Cluster information
+
+```bash
+kubectl cluster-info \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+---
+
+## Test workload
+
+```bash
+kubectl create deployment nginx \
+  --image=nginx \
+  --kubeconfig ~/admin.kubeconfig
+
+kubectl get pods \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+---
+
+# Cluster Verification
+
+Verify nodes:
+
+```bash
+kubectl get nodes \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+Verify networking:
+
+```bash
+kubectl get pods -n kube-system \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+Expected:
+
+```text
+calico-node
+calico-kube-controllers
+```
+
+should be running.
+
+---
+
+# Cleanup
+
+Destroy the entire environment:
+
+```bash
+multipass stop --all
+
+multipass delete --all
+
+multipass purge
+```
+
+---
+
+# Troubleshooting
+
+## View node status
+
+```bash
+kubectl get nodes \
+  --kubeconfig ~/admin.kubeconfig
+```
+
+---
+
+## Check kubelet
+
+```bash
+sudo systemctl status kubelet
+```
+
+---
+
+## Check API server
+
+```bash
+sudo systemctl status kube-apiserver
+```
+
+---
+
+## Check etcd
+
+```bash
+sudo systemctl status etcd
+```
+
+---
+
+## View logs
+
+```bash
+journalctl -u kubelet -f
+```
+
+```bash
+journalctl -u kube-apiserver -f
+```
+
+```bash
+journalctl -u etcd -f
+```
+
+---
