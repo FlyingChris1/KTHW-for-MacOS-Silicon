@@ -107,7 +107,7 @@ git --version
 
 ```bash
 git clone https://github.com/FlyingChris1/KTHW-for-MacOS-Silicon.git
-cd kubernetes-the-hard-way-multipass
+cd KTHW-for-MacOS-Silicon
 ```
 
 ---
